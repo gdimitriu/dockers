@@ -1,0 +1,186 @@
+#NOTE : the # contains comments the $ contains the actual command line with placeholders between <>
+#debug
+$ docker export <containerid> -o <fileName>
+#install
+$ sudo apt-get update
+$ sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu Bion stable"
+Now that you have the repository set up, run the following commands to install Docker:
+$ sudo apt-get update
+$ sudo apt-get install docker-ce
+
+$ sudo systemctl enable docker
+$ sudo systemctl start docker
+
+#test the instalation
+$ docker run --rm -ti ubuntu:latest /bin/bash
+
+#or you will have the same result
+$ sudo dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375
+
+to see underlining host
+$ docker run -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh
+
+/ # cat /etc/os-release
+PRETTY_NAME="Docker for Mac"
+
+/ # ps | grep dockerd
+ 1096 root       0:16 /usr/local/bin/dockerd -H unix:///var/run/docker.sock
+                          --config-file /run/config/docker/daemon.json
+                          --swarm-default-advertise-addr=eth0
+                          --userland-proxy-path /usr/bin/vpnkit-expose-port
+                          --storage-driver overlay2
+
+/ # exit
+
+#docker daemon configuration is in /etc/docker/daemon.json
+
+
+#adding env to the docker container is done using -e <VAR-NAME>=<VAR-VALUE>
+
+#Alpine is baes on musl standard library and not glibc and have sh instead of bash. However, you can also install glibc and bash in Alpine Linux if you really need it, and this is often done in the case of JVM containers.
+
+#to longin you should install
+$ sudo apt install gnome-keyring
+
+#Create a basic local repository
+$ git clone https://github.com/spkane/basic-registry --config core.autocrlf=input
+$ cp config.yml.sample config.yml
+$ cp registry.key.sample registry.key
+$ cp registry.crt.sample registry.crt
+
+$ cp config.yml.sample config.yml
+#Create key using
+$openssl req -x509 -nodes -sha256 -newkey rsa:4096 -keyout registry.key -out registry.crt -days 14 -subj '/CN=127.0.0.1'
+#create the user and password
+$ docker run --entrypoint htpasswd spkane/basic-registry:latest -Bbn ${<username>} ${<password>} > htpasswd
+
+$ docker build -t my-registry .
+$ docker run -d -p 5000:5000 --name registry my-registry
+$ docker logs registry
+
+#to keep images it could be done using -v /tmp/registry-data:/var/lib/registry
+
+#Keep images small
+$ docker run -d -p 8080:8080 adejonge/helloworld
+
+#to enter with ssh
+$ docker run -it --privileged --pid=host debian nsenter -t 1  -m -u -n -i sh
+
+#to see what is inside container
+$ docker exec -it <containerId> /bin/sh
+
+#to expose all ports use --network host expecial for ephemeral ports
+
+#Docker run command first call docker create and then docker start
+#change the random host name to a specific hostname
+$docker run --rm -ti --hostname=<hostNameFQD> ubuntu:latest /bin/bash
+
+#by default the container dns is the host resolve.conf but you could override using --dns=<dnsValue> and --dns-search=<dnsSearchHost>#mac address could be override by --mad-address=<macAddress>
+
+
+#to mount directory from host machine by example by default shared are rw but it could ro using ro
+$ docker run --rm -ti -v <host_directory>:<mount-directory>:ro ubuntu:latest /bin/bash
+
+#option to shared between containter is z for private is Z like : <host_directory>:<mount_directory>:z
+#you could mount the root directory as readonly using --read-only=true
+#to mount a temporary file like /tmp the following option should be use --tmpfs/tmp:rw,noexec,nodev,nosuid,size=256M
+
+#for the quota you could use : --cpu 2 --io 1 --vm 2 --vm-bytes 128M --timeout 120s --memory <memory_value> and also -cpu-#--memory-swap <memory value> is for both phisical memory and swap
+quota also --cpus=<value between 0.01 and number of cpu>
+
+#use --cpuset=cpu_number to set afinity to a specific hardware cpu
+#to dimically update quotas you could use
+$ docker update --cpus="1.5" <containerID1> ... <containerIDn>
+
+#The telltale sign of out of memory is a container exit code of 137 and kernel out-of-memory (OOM) messages in the dmesg output.
+#Docker has features that allow you to tune and disable the Linux OOM killer by using the --oom-kill-disable and the --oom-score-adj arguments to docker run.
+
+#Block IO
+#To set this weight on a container, you need to pass the --blkio-weight to your docker run command with a valid value. You can also target a specific device using the --blkio-weight-device option.
+
+#As with CPU shares, tuning the weights is hard to get right in practice, but we can make it vastly simpler by limiting the maximum number of bytes or operations per second that are available to a container via its cgroup. The following settings let us control that:
+
+#--device-read-bps     Limit read rate (bytes per second) from a device
+#--device-read-iops    Limit read rate (IO per second) from a device
+#--device-write-bps    Limit write rate (bytes per second) to a device
+#--device-write-iops   Limit write rate (IO per second) to a device
+
+#set the docker soft limit to 50 open files andhard limit to 150 open files
+$ sudo dockerd --default-ulimit nofile=50:150
+
+#to create a container use
+$ docker create -p <docker_port:host:port> <imageName>
+#to see all containers use
+$ docker -ps -a
+#to start a container use
+$ docker start <containerId>
+#To autorestart containers use --restart:on-failure, then whenever the container exits with a nonzero exit code or --restart:unless stopped if you want to autorestart unless you specific stopped it, other options :no, always
+#the --restart:<type of failure>:<nr of retries>
+#stop the container send SIGTERM if you add -t <timeout> it will send SIGKILL after timeout
+#on docker kill you could add the --signal=<name of the signal>
+
+#to clean-up all dockers in dev there is the command:
+$ docker system prune
+
+#to delete all of containers on docker host use:
+$ docker rm $(docker ps -a -q)
+
+#to delete all images on docker host use:
+$ docker rmmi $(docker images -q)
+
+#Docker ps and docker images have filter capability using --filter like:
+$ docker rm $(docker ps -a -q --filter 'exited!=0')
+#of for untagged containers
+$ docker rmi $(docker images -q -f "dangling=true")
+
+#In most installations, /var/lib/docker will be the default root directory used to store images and containers. If you need to change this, you can edit your Docker startup scripts to launch the daemon, with the --data-root argument pointing to a new storage location. To test this by hand, you could run something like this:
+$ sudo dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 --data-root="/data/docker"
+
+#The syntax for pulling them from the registry is very similar, but note the @ in the tag.
+$ docker pull ubuntu@sha256:2f9a...82cf
+
+#Docker containers don’t, by default, start anything in the background like a full virtual machine would. They’re a lot lighter weight than that and therefore don’t start an init system.
+
+#by default docker redirect input and output to the caller of the docker
+
+#the other equivalence of the docker exec is nsenter but this should be run on the docker server host
+#first obtain the pid of the docker process
+$ PID=$(docker inspect --format \{{.State.Pid\}} <containerId>)
+#the run 
+$ sudo nsenter --target $PID --mount --uts --ipc --net --pid
+#or in one line
+$ sudo nsenter --target $(docker inspect --format \{{.State.Pid\}} <containerId>) --mount --uts --ipc --net --pid /bin/sh
+# wrapper from git is https://github.com/Pithikos/docker-enter
+
+#to create a volume to be attached to the container
+$ docker volume create <name-of-volume>
+#to inspect a created volume
+$ docker volume inspect <name-of-volume>
+#to mount a volume to a container use --mount source=<name-of-volume>,target=<target-directory>
+#to delete the volume which will lost any data writed into the volume
+$ docker volume rm <name-of-volume>
+
+
+#log are stored on /var/lib/docker/containers/<container_id>/ where the <container_id> in json format
+#logging rotation: The default settings do not currently enable log rotation. You’ll want to make sure you specify the --log-opt max-size and --log-opt max-file settings if running in production. 
+#to change to other type of log : he supported option that currently is the simplest for running Docker at scale is the option to send your container logs to syslog directly from Docker. You can specify this on the Docker command line with the --log-driver=syslog option or set it as the default in the daemon.json file for all containers. Then restart the daemon.
+
+#You can log directly to a remote syslog-compatible server from a single container by setting the log option syslog-address similar to this: --log-opt syslog-address=udp://192.168.42.42:123.
+
+#API running on docker like statistics in pretty-print format
+$ curl --unix-socket /var/run/docker.sock http://v1/containers/91c86ec7b33f/stats | head -1 | python3 json.tool
+
+#health check git location  https://github.com/spkane/rocketchat-hubot-demo.git
+
+#docker events to monitor events on container
+$ docker events
+#or the equivalent
+$ curl --unix-socket /var/run/docker.sock http://v1/events
+
+#cadivisor to have charts on 8080 port of the docker container which run cadvisor or rest on 8080/api/v1.3/containers/
+$ docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=8080:8080 --detach=true --name=cadvisor google/cadvisor:latest
+#for fedora or RHEL you need also the volume :  --volume=/cgroup:/cgroup \.
+

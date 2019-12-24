@@ -1,0 +1,11 @@
+#Build container
+FROM ubuntu:latest
+
+USER root
+
+#Product container
+COPY ./hello /hello
+ADD ./hello /hello
+
+#EXPOSE 8080
+cmd ["/hello"]

@@ -60,7 +60,7 @@ $ docker run --entrypoint htpasswd spkane/basic-registry:latest -Bbn ${<username
 $ docker build -t my-registry .
 $ docker run -d -p 5000:5000 --name registry my-registry
 $ docker logs registry
-
+$ docker login 127.0.0.1:5000
 #to keep images it could be done using -v /tmp/registry-data:/var/lib/registry
 
 #Keep images small
@@ -81,12 +81,25 @@ $docker run --rm -ti --hostname=<hostNameFQD> ubuntu:latest /bin/bash
 #by default the container dns is the host resolve.conf but you could override using --dns=<dnsValue> and --dns-search=<dnsSearchHost>#mac address could be override by --mad-address=<macAddress>
 
 
+################# Mount and volumes ####################################
+
 #to mount directory from host machine by example by default shared are rw but it could ro using ro
 $ docker run --rm -ti -v <host_directory>:<mount-directory>:ro ubuntu:latest /bin/bash
 
 #option to shared between containter is z for private is Z like : <host_directory>:<mount_directory>:z
 #you could mount the root directory as readonly using --read-only=true
 #to mount a temporary file like /tmp the following option should be use --tmpfs/tmp:rw,noexec,nodev,nosuid,size=256M
+
+#to create a volume to be attached to the container
+$ docker volume create <name-of-volume>
+#to inspect a created volume
+$ docker volume inspect <name-of-volume>
+#to mount a volume to a container use --mount source=<name-of-volume>,target=<target-directory>
+#to delete the volume which will lost any data writed into the volume
+$ docker volume rm <name-of-volume>
+
+
+############################## Quota ######################################
 
 #for the quota you could use : --cpu 2 --io 1 --vm 2 --vm-bytes 128M --timeout 120s --memory <memory_value> and also -cpu-#--memory-swap <memory value> is for both phisical memory and swap
 quota also --cpus=<value between 0.01 and number of cpu>
@@ -155,14 +168,6 @@ $ sudo nsenter --target $PID --mount --uts --ipc --net --pid
 $ sudo nsenter --target $(docker inspect --format \{{.State.Pid\}} <containerId>) --mount --uts --ipc --net --pid /bin/sh
 # wrapper from git is https://github.com/Pithikos/docker-enter
 
-#to create a volume to be attached to the container
-$ docker volume create <name-of-volume>
-#to inspect a created volume
-$ docker volume inspect <name-of-volume>
-#to mount a volume to a container use --mount source=<name-of-volume>,target=<target-directory>
-#to delete the volume which will lost any data writed into the volume
-$ docker volume rm <name-of-volume>
-
 
 #log are stored on /var/lib/docker/containers/<container_id>/ where the <container_id> in json format
 #logging rotation: The default settings do not currently enable log rotation. You’ll want to make sure you specify the --log-opt max-size and --log-opt max-file settings if running in production. 
@@ -184,3 +189,17 @@ $ curl --unix-socket /var/run/docker.sock http://v1/events
 $ docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=8080:8080 --detach=true --name=cadvisor google/cadvisor:latest
 #for fedora or RHEL you need also the volume :  --volume=/cgroup:/cgroup \.
 
+#In Dockerfile the COPY will copy the host file into container the ADD will get from network or untar the tar
+#on ADD you could said what type of security --chown=UID:GID
+#WORKDIR change the context of layers is not equivalent with RUN cd because the last one is not persisted
+#Put on the first part of the Dockerfile the part that is not change every time so those layers will not be rebuild each time.
+#use .dockerignore which is like .gitignore to filter the files which will be put pattern to exclude files from the directory.
+#docker image save and load should be use to create a tarball from an image and recreate the image from the tarball.
+
+#Image name: <registry URL>/<User or Org>/<name>:<tag>
+#<registry URL> the default is docker.io but thare are more like :
+# https://cloud.google.com/container-registry
+# https://aws.amazon.com/ecr/
+# https://azure.microsoft.com/en-us/services/container-registry/
+# https://access.redhat.com/container/
+# https://jfrog.com/integration/artifactory-docker-registry

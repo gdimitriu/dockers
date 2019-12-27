@@ -1,0 +1,11 @@
+FROM ubuntu:eoan
+
+RUN apt-get update \
+  && apt-get install -y wget iputils-ping\
+  && mkdir /app
+
+COPY hello /hello
+ADD hello.tar /app
+
+ENTRYPOINT ["/usr/bin/ping"]
+CMD ["127.0.0.1","-w", "5"]

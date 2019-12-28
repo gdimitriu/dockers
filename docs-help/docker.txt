@@ -72,7 +72,7 @@ $ docker run -it --privileged --pid=host debian nsenter -t 1  -m -u -n -i sh
 #to see what is inside container
 $ docker exec -it <containerId> /bin/sh
 
-#to expose all ports use --network host expecial for ephemeral ports
+#to expose all ports use --network host especial for ephemeral ports
 
 #Docker run command first call docker create and then docker start
 #change the random host name to a specific hostname
@@ -203,3 +203,36 @@ $ docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/
 # https://azure.microsoft.com/en-us/services/container-registry/
 # https://access.redhat.com/container/
 # https://jfrog.com/integration/artifactory-docker-registry
+
+########################NETWORK ###############################################
+# Bridge is provided by docker and is local. Simple network based on Linux bridgs allowing networking on a single host
+# Macvlan is provided by docker and is local. Configures multiple layer 2 (MAC) addresses on a single physical host interface
+# Overlay is provided by docker and is global. Multinode-capable container network based on Virtual Extensible LAN (VXLan)
+# Weave Net is provided by Weaveworks and is global. Simple, resilient, multihost Docker networking.
+# Contiv Network Plugin is provided by Cisco and is global . Open Source container networking.
+
+#To list network on host use:
+$ docker network ls
+
+#To specify the network range (subnet) when creating a new network you should use like this:
+$ docker network create --driver bridge --subnet "10.1.0.0/16" test-net
+
+#Host network should never be used in production is the same network for the container as the host (like the same ip)
+#you could ask the running container to run in the same network as another container specifing  --network container:<containerName>
+#to expose port use -p <host port>:<container port>/<protocol like tcp/udp> the tcp is the default protocol
+
+############################ DOCKER COMPOSE #####################################################
+#volumes: declare which volume to be created at first run, this will be not recreated after first run
+#volumes inside service declaration could be a volume declared or a directory from host as is mount using -v
+#by default docker-compose up is using interactive mode so the terminal si blocked to run as daemon use -d
+#docker compose prefixed all containers with the name of directory in which reside docker-compose.yml
+#you could scale the application at start usingd --scale <serviceName>=<nr of instances>
+#you could scale later on using docker-compose sclale <serviceName>=<nr of instances>
+#build option in yml is the directory (context) where it should find the Dockerfile it could be specified by: context: <directory where is the dockerfile> and dockerfile: <the name of the dockerfile if is not Dockerfile>
+#To push docker compose use:
+$ docker-compose -f Dockerfile push
+
+#useful links : https://docs.docker.com/compose/   https://docs.docker.com/compose/compose-file/
+
+
+############################### Orchestrators #####################################################

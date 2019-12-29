@@ -1,0 +1,6 @@
+FROM ubuntu:eoan
+#RUN apt-get -y update && apt-get install -y joe
+#VOLUME /data
+COPY ./hello /hello
+EXPOSE 8080
+CMD ["/hello"]

@@ -1,3 +1,0 @@
-FROM ubuntu:eoan
-RUN apt-get -y update
-VOLUME /data

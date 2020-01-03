@@ -391,3 +391,69 @@ $ kubectl cluster-info
 $ echo 'source <(kubectl completion bash)' >>~/.bashrc
 $ kubectl completion bash > kubectl
 $ sudo mv kubectl /etc/bash_completion.d/
+
+#it is ok to have workers in hybrid OS : linux an Windows Server 2010 from kubernetes 1.10
+
+#useful commands
+
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+
+#MINIKUBE does not have LoadBallancer integrated so you should use an external one or emulate but is not working ...
+$ minikube tunnel
+
+#To describe a pod use :
+$ kubectl describe pod/<name Of Pod>
+
+#To see the persisted volume claim use
+$ kubectl get pvc
+
+#To enter into a pod use:
+$ kubectl exec -it <NameOfPod> -- /bin/sh
+
+#example:
+$ kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.4
+$ kubectl expose deployment hello-minikube --type=NodePort --port=8080
+$ minikube service hello-minikube
+
+##
+$ kubectl run hello-minikube --image=k8s.gcr.io/echoserver:1.4 --port=8080 deployment "hello-minikube" created
+$ kubectl expose deployment hello-minikube --type=NodePort service "hello-minikube" exposed
+$ kubectl service hello-minikube --url
+
+#full scale deployment example
+$ git clone https://github.com/bluewhalebook/docker-up-and-running-2nd-edition.git
+
+$ http://192.168.99.110:30171/documents/docker-up-and-running-public/sample.pdf?page=1
+
+#bubernetes and load balancer
+
+https://blog.codonomics.com/2019/02/loadbalancer-support-with-minikube-for-k8s.html
+
+https://metallb.universe.tf/installation/network-addons/
+
+https://stackoverflow.com/questions/44110876/kubernetes-service-external-ip-pending
+
+#ClusterIp is used for services that are not supposed to be seen outside of cluster in contrast with NodePort and LoadBalancer
+#StatefulSet is used for db and persistence in contrast with ReplicaSet
+
+#kubectl edit <service> could be used to modify running service for blue-green roll
+
+#Secret created manually using base64 with kind Secret and type Opaque and data with secret could be retrieved back using kubectl get secrets/<secretName> -o yaml
+#it should be created using kubectl command like
+$ kubectl create secret generic pets-secret-prod --from-file=./username.txt --from-file=./password.txt
+#to be used use in yaml the:
+#volumeMounts:
+# - name: secrets
+#   mountPath: "/etc/secrets"
+#   readOnly: true
+#volumes:
+# - name: secrets
+#   secret:
+#      secretName: pets-secret
+#to be available in env use:
+# env:
+# - name: <PETS_USERNAME>
+#   valueFrom:
+#	secretKeyRef:
+#		name:
+#		key

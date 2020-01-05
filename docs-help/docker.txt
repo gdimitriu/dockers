@@ -1,3 +1,7 @@
+#links for docker gits:
+
+https://github.com/fundamentalsofdocker/labs
+
 #NOTE : the # contains comments the $ contains the actual command line with placeholders between <>
 
 ##################link to install docker-machine ###############################

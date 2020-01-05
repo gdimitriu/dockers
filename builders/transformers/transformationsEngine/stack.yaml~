@@ -1,0 +1,18 @@
+version: "3.5"
+services:
+    tranformationsEngine:
+        image: gdimitriu/transformations-engine:latest
+        ports:
+            - 8099:8099
+        networks:
+            - transformers-net
+        deploy:
+            replicas: 2
+            update_config:
+                parallelism: 2
+                delay: 10s
+                
+networks:
+    transformers-net:
+        driver: overlay
+        

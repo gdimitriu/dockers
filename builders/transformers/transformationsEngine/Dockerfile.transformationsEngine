@@ -1,0 +1,14 @@
+FROM openjdk:8-alpine AS build
+RUN apk update && apk add maven && apk add git
+RUN mkdir /builder
+WORKDIR /builder
+RUN git clone https://github.com/gdimitriu/transformers.git --config core.autocrlf=input
+WORKDIR /builder/transformers/transformationsEngine
+RUN mvn clean package
+
+FROM openjdk:8-alpine
+COPY --from=build /builder/transformers/transformationsEngine/target/assembly /app
+WORKDIR /app
+EXPOSE 8099
+ENTRYPOINT ["java"]
+CMD ["-jar", "/app/bin/transformationsEngine.jar", "8099"]

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: engine
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: engine
+            service: transformers
+    template:
+        metadata:
+            labels:
+                app: engine
+                service: transformers
+        spec:
+            containers:
+            - image: gdimitriu/transformations-engine:latest
+              name: engine
+              ports:
+              - containerPort: 8099
+                protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: transformers
+spec:
+    type: NodePort
+    ports:
+    - port: 8099
+      protocol: TCP
+    selector:
+        app: engine
+        service: transformers

@@ -1,6 +1,19 @@
+# HAProxy for free LoadBalancer but I do not know if it works with docker
 #links for docker gits:
 
 https://github.com/fundamentalsofdocker/labs
+
+#documentations:
+
+https://docs.docker.com/engine/swarm/
+
+https://docs.docker.com/compose/
+
+https://stackoverflow.com/questions/42208442/maven-docker-cache-dependencies
+
+https://docs.docker.com/engine/reference/commandline/push/
+
+
 
 #NOTE : the # contains comments the $ contains the actual command line with placeholders between <>
 
@@ -138,6 +151,16 @@ $ docker volume inspect <name-of-volume>
 #to delete the volume which will lost any data writed into the volume
 $ docker volume rm <name-of-volume>
 
+#Type of backends:
+# Overlay and overlay2 is a union filesystem where multiple layers are mounted together so they appear as a single file system
+# AuFs is the original one and is no longer recommended
+# Btrfs is a copy on write filesystem, it is ok but does not support SELinux
+# Device Mapper is on RedHat OS. By default is use loop-lvm mode which has zero configuration which is very slow, for production use direct-lvm
+# VFS is the simplest and slowest. Is very slow to create new containers but runtime is native
+# ZFS for production with increase cost due to license
+# selecting storage is used by example :
+$ dockerd --storage-driver=devicemapper
+
 
 ############################## Quota ######################################
 
@@ -246,8 +269,8 @@ $ docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/
 
 ########################NETWORK ###############################################
 # Bridge is provided by docker and is local. Simple network based on Linux bridgs allowing networking on a single host
-# Macvlan is provided by docker and is local. Configures multiple layer 2 (MAC) addresses on a single physical host interface
-# Overlay is provided by docker and is global. Multinode-capable container network based on Virtual Extensible LAN (VXLan)
+# Macvlan is provided by docker and is local. Configures multiple layer 2 (MAC) addresses on a single physical host interface. When migrating legacy system to a container-native one, this can be a really useful step.
+# Overlay is provided by docker and is global. Multinode-capable container network based on Virtual Extensible LAN (VXLan) is used by docker swarm
 # Weave Net is provided by Weaveworks and is global. Simple, resilient, multihost Docker networking.
 # Contiv Network Plugin is provided by Cisco and is global . Open Source container networking.
 
@@ -260,6 +283,7 @@ $ docker network create --driver bridge --subnet "10.1.0.0/16" test-net
 #Host network should never be used in production is the same network for the container as the host (like the same ip)
 #you could ask the running container to run in the same network as another container specifing  --network container:<containerName>
 #to expose port use -p <host port>:<container port>/<protocol like tcp/udp> the tcp is the default protocol
+
 
 ############################ DOCKER COMPOSE #####################################################
 #volumes: declare which volume to be created at first run, this will be not recreated after first run
@@ -274,6 +298,33 @@ $ docker-compose -f Dockerfile push
 
 #useful links : https://docs.docker.com/compose/   https://docs.docker.com/compose/compose-file/
 
+############################## DOCKER SECURITY ####################################################
+
+#run the container in privileged mode so it you want to add device mount etc : add at container start --privileged=true
+#The container could be run with non privileged user using -u <userId> otherwise is root
+#all containers could be run with non priviledged user using --serns-remap in dockerd command
+#if in priviledged container you mount swap using swapon <swap file> be sure you do swapoff before exit the container otherwise the container couln't be destroy
+#if you forget that you could unmount from host using root like:
+$ sudo swapoff /var/lib/docker/overlay/<containerId>/upper/<swap_file>
+#if you want only some priviledged use --cap-add=<priviledge> and if you want to disable some priviledge you use --cap-drop=<priviledge>
+#you could use  seccomp profile file to fine grain the capability of the container
+#use -tlsverify to require certificates if you are in production
+
+############################### DOCKER ARCHITECTURE #################################################
+
+# dockerd - one per server, build container images, management : high level network, volumes, logging, statistics etc
+# containerd - one per server, manages lifecycle execution, copy on write fileisystem an low level network
+# docker-containerd-shim - one per container, handle IO and reports exit status
+# runc - constructs the container and execution, statistics, reports events on lifecycle
+#runtime continer could be Clear Containers (cc-runtime), runc or Railcar to select one use
+$ docker run --runtime <runtime> -d <command>
+#to see which container works with by example use :
+$ sudo cc-runtime list
+#gVisor is for high secure isolation and for for massive scalling, the runtime is runsc
+
+############################### OTHER STUFF #######################################################
+
+#If you use a process manager or initialization system on your servers, like upstart or systemd, it is usually very easy to direct all process output to STDOUT and STDERR and then have your process monitor capture them and send them to a remote logging host.
 
 ############################### Orchestrators #####################################################
 ############################### Docker Swarm ######################################################
@@ -461,3 +512,7 @@ $ kubectl create secret generic pets-secret-prod --from-file=./username.txt --fr
 #	secretKeyRef:
 #		name:
 #		key
+
+##dont forget to delete the deployment then everyting is deleted otherwise the replicaset will be created each time
+
+

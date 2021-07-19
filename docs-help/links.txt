@@ -1,0 +1,25 @@
+
+https://docs.docker.com/engine/installation/linux/centos/
+https://docs.docker.com/engine/userguide/containers/dockerimages/
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-14-04
+https://docs.docker.com/engine/quickstart/
+
+http://docs.ansible.com/ansible/intro_installation.html
+http://docs.ansible.com/ansible/intro_adhoc.html
+http://docs.ansible.com/ansible/playbooks_intro.html
+http://docs.ansible.com/ansible/intro_adhoc.html#id8
+https://github.com/ansible/ansible/tree/devel
+problem with ansible:
+http://stackoverflow.com/questions/26321384/ansible-synchronize-not-able-to-create-directory-as-root
+
+
+https://axway.jiveon.com/groups/enterprise-continuous-delivery-ecd/blog/2015/04/24/curl-ntlm-transparent-proxy-firewall
+http://stackoverflow.com/questions/9829175/pip-install-matplotlib-error-with-virtualenv
+http://docs.cython.org/src/quickstart/install.html
+
+
+centos containers
+
+https://hub.docker.com/_/centos/
+
+

@@ -1,0 +1,21 @@
+#does not work with latest version from mai 2022
+wordpress:
+    image: wordpress
+    links:
+        - db
+    ports:
+        - 8080:80
+    environment:
+        WORDPRESS_DB_HOST: db:3306
+        WORDPRESS_DB_USER: exampleuser
+        WORDPRESS_DB_PASSWORD: examplepass
+        WORDPRESS_DB_NAME: exampledb
+    restart: always
+
+db:
+    image: mariadb
+    environment:
+       MARIADB_DATABASE: exampledb
+       MARIADB_USER: exampleuser
+       MARIADB_PASSWORD: examplepass
+       MARIADB_ROOT_PASSWORD: example

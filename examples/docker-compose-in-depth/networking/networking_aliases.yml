@@ -1,0 +1,32 @@
+version: '2'
+services:
+    a:
+        image: tutum/hello-world
+        container_name: foo #does not scale
+        networks:
+            - frontend
+# works before
+#            frontend:
+#                aliases:
+#                    - web
+        links:
+            - b:bee
+            - c:cee # does not work in version 2 if they don't share same network
+    b:
+        image: tutum/hello-world
+        networks:
+            frontend:
+                aliases:
+                    - web
+            backend:
+                aliases:
+                    - webserv
+    c:
+        image: tutum/hello-world
+        networks:
+            - backend
+networks:
+    frontend:
+        driver: bridge
+    backend:
+        driver: bridge

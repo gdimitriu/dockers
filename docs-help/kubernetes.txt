@@ -1,0 +1,28 @@
+kubectl run kuard --generator=run-pod/v1 --image=gcr.io/kuar-demo/kuard-amd64:blue
+kubectl get pods
+docker run -d --name kuard --publish 8080:8080  gcr.io/kuar-demo/kuard-amd64:blue
+kubectl apply -f kuard-pod.yaml
+kubectl delete pods/kuard
+#or using
+kubectl delete -f kuard-pod.yaml
+kubectl describe pods kuard
+#expose the internal port to external 8090
+kubectl port-forward kuard 8090:8080
+#getting logs
+kubectl logs kuard
+#adding --previous will get log from the previous container
+# execute operations in container
+kubectl exec kuard date
+kubectl exec -it kuard ash
+# kubectl cp <source> <destination>
+#for pod use <pod-name>:<file>
+#package to extend kubectl io.kubernetes.client.extended.kubectl
+#use https://github.com/open-policy-agent/conftest to access the policy of the Gatekeeper
+#to install Gatekeeper
+kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/release-3.5/deploy/gatekeeper.yaml
+#to validate that is running
+kubectl get pods -n gatekeeper-system
+#to validate how webhook is configured
+kubectl get validatingwebhookconfiguration -o yaml
+#audit
+kubectl get constraint repo-is-kuar-demo -o yaml

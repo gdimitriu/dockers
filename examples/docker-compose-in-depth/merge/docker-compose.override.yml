@@ -1,0 +1,5 @@
+version: '2'
+services:
+    merge-example:
+        ports:
+            - 8080:80

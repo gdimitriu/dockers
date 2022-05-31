@@ -267,6 +267,8 @@ $ docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/
 # https://access.redhat.com/container/
 # https://jfrog.com/integration/artifactory-docker-registry
 
+# docker inspect could use --format to filter the result
+
 ########################NETWORK ###############################################
 # Bridge is provided by docker and is local. Simple network based on Linux bridgs allowing networking on a single host
 # Macvlan is provided by docker and is local. Configures multiple layer 2 (MAC) addresses on a single physical host interface. When migrating legacy system to a container-native one, this can be a really useful step.
@@ -283,9 +285,12 @@ $ docker network create --driver bridge --subnet "10.1.0.0/16" test-net
 #Host network should never be used in production is the same network for the container as the host (like the same ip)
 #you could ask the running container to run in the same network as another container specifing  --network container:<containerName>
 #to expose port use -p <host port>:<container port>/<protocol like tcp/udp> the tcp is the default protocol
-
+$ docker network inspect <network_id>
 
 ############################ DOCKER COMPOSE #####################################################
+
+# githubs links: https://github.com/avescodes/docker-compose-in-depth
+
 #volumes: declare which volume to be created at first run, this will be not recreated after first run
 #volumes inside service declaration could be a volume declared or a directory from host as is mount using -v
 #by default docker-compose up is using interactive mode so the terminal si blocked to run as daemon use -d
@@ -297,6 +302,37 @@ $ docker network create --driver bridge --subnet "10.1.0.0/16" test-net
 $ docker-compose -f Dockerfile push
 
 #useful links : https://docs.docker.com/compose/   https://docs.docker.com/compose/compose-file/
+#link use <service>:<name> will deliver the property name to the container
+# docker-compose rm #remove data from a containers
+# docker-compose network default is bridge which link all containers
+$ docker-compose exec <service_name> sh
+# container_name is global even to docker host machine and could not scale using docker-compose scale
+# links should be use in the same network it was working before in version 1
+# when contianer is replaced the old connection between the remaining container and the old remain open but no data is transfer but a new connection will work !!
+# use external_links to make an internal name to an external container which is connected to an external network, both should be share the network (external network should be defined in networks as external: true)
+# use docker-compose port to find out which port is mapped to docker host
+$ docker-compose port <service_name> <port_number>
+# use external for external volume also
+# see docs.docker.com/engine/extend/plugins/ to see the supported volume plugins
+# docs.docker.com/engine/admin/logging/overview
+# to get logs from the containers the default driver is json-file
+$ docker-compose logs <container_id>
+# paptertrailapp.com for free logging service to be used: driver is syslog and options is syslog-address: "udp://logs4.papertrailapp.com:33624"
+# when you use external system docmer-compose logs is not available
+########## docker-compose CLI ###############
+# the dirrectory is used as prefix for the container names
+# COMPOSE_NAME_PROJECT or --project-name when start an evironment instead of directory
+# doenv from github is a good project to mangage development environments
+# docker-composer events give events from the docker compose
+# docker-compose config check the config file and reports errors if it has also if is correct it will print it
+# orphan containers are containers that have been run using docker-compose run command
+# in docker-compose.yml it is possible to run with ${}
+# .env is read the by the docker-compose and replace the environments
+# each service could have a key env_file: with a list of files.
+# on evironment key if you specify variable without value it will be taken from the external environment
+# configuration files are loaded left to right
+# docker-compose.override.yml will override configuration from the docker-compose file but only if you don't specify file with -f
+
 
 ############################## DOCKER SECURITY ####################################################
 
@@ -325,9 +361,12 @@ $ sudo cc-runtime list
 ############################### OTHER STUFF #######################################################
 
 #If you use a process manager or initialization system on your servers, like upstart or systemd, it is usually very easy to direct all process output to STDOUT and STDERR and then have your process monitor capture them and send them to a remote logging host.
+# progrim for loadbalancer
+# infrastructure teraform
 
 ############################### Orchestrators #####################################################
 ############################### Docker Swarm ######################################################
+############################### Deprecated and removed ############################################
 #Only one manager node for dev, test and demo, three manager in small to medium size swarm and five managers for large to extra large swarms
 #a worker communicate only with three neighbors
 #init the swarm using

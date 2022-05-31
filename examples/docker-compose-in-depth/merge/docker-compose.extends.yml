@@ -1,0 +1,10 @@
+version: '2'
+services:
+    hello:
+        extends:
+            file: docker-compose.base.yml
+            service: base
+        ports:
+            - 80
+        environment:
+            SERVICE: hello

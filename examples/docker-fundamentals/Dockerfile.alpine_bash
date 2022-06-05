@@ -1,0 +1,7 @@
+# THIS IS MY ALPINE WITH BASH
+FROM alpine:latest
+
+RUN apk update
+RUN apk add bash
+
+CMD bash

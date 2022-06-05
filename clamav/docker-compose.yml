@@ -1,0 +1,34 @@
+version: "3.4"
+networks:
+  app-tier:
+    driver: bridge
+services:
+    antivirus:
+        image: 'clamav/clamav:latest'
+        networks:
+            app-tier:
+                aliases:
+                    - utils-antivirus
+        hostname: utils-antivirus
+        ports:
+            - '3310:3310'
+    i-cap:
+        build:
+            context: .
+            dockerfile: 'Dockerfile'
+        networks:
+            app-tier:
+                aliases:
+                    - utils-i-cap
+        hostname: utils-i-cap
+        ports:
+            - '1344:1344'        
+        depends_on:
+            - antivirus
+        healthcheck:
+            test: ["CMD", "nc", "-w","1","utils-antivirus","3310"]
+            interval: 1m30s
+            timeout: 10s
+            retries: 20
+            start_period: 1m
+        

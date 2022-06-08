@@ -1,0 +1,11 @@
+FROM nginx:latest
+
+RUN apt-get update && apt-get install gettext-base
+
+ENV PROXY_PROTOCOL=http PROXY_UPSTREAM=example.com
+
+COPY proxy.conf /etc/nginx/conf.d/default.template
+#COPY proxy_orig.conf /etc/nginx/conf.d/default.conf
+
+COPY start.sh /
+CMD ["/start.sh"]

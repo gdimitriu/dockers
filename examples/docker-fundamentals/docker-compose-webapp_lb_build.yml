@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+    pg:
+        image: postgres:9.6-alpine
+        environment:
+            - POSTGRES_DB
+            - POSTGRES_USER
+            - POSTGRES_PASSWORD
+ #       env_file:
+ #           - ./db-compose.env
+        volumes:
+            - pg-data:/var/lib/postgresql/data
+
+    webapp:
+        #image: jfahrer/demo_web_app:latest
+        image: jfahrer/demo_web_app:wait_for_pg
+#        ports:
+#            - 9292:9292
+        environment:
+            - POSTGRES_DB
+            - POSTGRES_USER
+            - POSTGRES_PASSWORD
+            - POSTGRES_HOST
+#        env_file:
+#            - ./db-compose.env
+#            - ./webapp-compose.env
+        depends_on:
+            - pg
+    lb:
+        image: lb:latest
+        build:
+            context: ./
+            dockerfile: ./Dockerfile.loadbalancer
+            
+        env_file:
+            - ./lb.env
+        ports:
+            - 80:80
+        depends_on:
+            - webapp
+volumes:
+    pg-data:

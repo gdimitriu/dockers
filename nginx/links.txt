@@ -1,0 +1,2 @@
+https://gist.githubusercontent.com/nginx-gists/87ed942d4ee9f7e7ebb2ccf757ed90be/raw/f96b46b5acbdd775fd4132743dc98e82eaad93b1/grpc_gateway.conf
+

@@ -1,0 +1,12 @@
+$ sudo docker run --name rg1 -p 10001:50051 -d routeguide
+$ sudo docker run --name rg2 -p 10002:50051 -d routeguide
+$ sudo docker run --name rg3 -p 10003:50051 -d routeguide
+
+$ sudo docker run --name hw1 -p 20001:50051 -d helloworld
+$ sudo docker run --name hw2 -p 20002:50051 -d helloworld
+
+from the client container
+$ go run go/src/google.golang.org/grpc/examples/helloworld/ greeter_client/main.go
+$ cd grpc/examples/python/route_guide
+$ python route_guide_client.py
+$ tail /var/log/nginx/grpc_log.json

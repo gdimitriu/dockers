@@ -1,0 +1,59 @@
+############################ DOCKER COMPOSE #####################################################
+
+
+# githubs links: https://github.com/avescodes/docker-compose-in-depth
+
+#volumes: declare which volume to be created at first run, this will be not recreated after first run
+#volumes inside service declaration could be a volume declared or a directory from host as is mount using -v
+#by default docker-compose up is using interactive mode so the terminal si blocked to run as daemon use -d
+#docker compose prefixed all containers with the name of directory in which reside docker-compose.yml
+#you could scale the application at start usingd --scale <serviceName>=<nr of instances>
+#you could scale later on using docker-compose sclale <serviceName>=<nr of instances>
+#build option in yml is the directory (context) where it should find the Dockerfile it could be specified by: context: <directory where is the dockerfile> and dockerfile: <the name of the dockerfile if is not Dockerfile>
+#To push docker compose use:
+$ docker-compose -f Dockerfile push
+
+#useful links : https://docs.docker.com/compose/   https://docs.docker.com/compose/compose-file/
+#link use <service>:<name> will deliver the property name to the container
+# docker-compose rm #remove data from a containers
+# docker-compose network default is bridge which link all containers
+$ docker-compose exec <service_name> sh
+# container_name is global even to docker host machine and could not scale using docker-compose scale
+# links should be use in the same network it was working before in version 1
+# when contianer is replaced the old connection between the remaining container and the old remain open but no data is transfer but a new connection will work !!
+# use external_links to make an internal name to an external container which is connected to an external network, both should be share the network (external network should be defined in networks as external: true)
+# use docker-compose port to find out which port is mapped to docker host
+$ docker-compose port <service_name> <port_number>
+# use external for external volume also
+# see docs.docker.com/engine/extend/plugins/ to see the supported volume plugins
+# docs.docker.com/engine/admin/logging/overview
+# to get logs from the containers the default driver is json-file
+$ docker-compose logs <container_id>
+# paptertrailapp.com for free logging service to be used: driver is syslog and options is syslog-address: "udp://logs4.papertrailapp.com:33624"
+# when you use external system docmer-compose logs is not available
+########## docker-compose CLI ###############
+# the dirrectory is used as prefix for the container names
+# COMPOSE_NAME_PROJECT or --project-name when start an evironment instead of directory
+# doenv from github is a good project to mangage development environments
+# docker-composer events give events from the docker compose
+# docker-compose config check the config file and reports errors if it has also if is correct it will print it
+# orphan containers are containers that have been run using docker-compose run command
+# in docker-compose.yml it is possible to run with ${}
+# .env is read the by the docker-compose and replace the environments
+# each service could have a key env_file: with a list of files.
+# on evironment key if you specify variable without value it will be taken from the external environment
+# configuration files are loaded left to right
+# docker-compose.override.yml will override configuration from the docker-compose file but only if you don't specify file with -f
+
+
+#### from docker fundamentals #####
+# docker compose prefix all resources with the directory in which docker-compose reside
+# stdin_open and tty is similar with -it
+# use environment tag to read the environment variables from .env
+# is your job to see if the dependency is ready to be use
+# docker-compose up --build will rebuild all containers
+
+command: use before after to wait for something to finish in container (but only if you create an entrypoint)
+hostname: to specify the host name
+
+

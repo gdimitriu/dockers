@@ -1,0 +1,63 @@
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:33021         0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:6942          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:37219         0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:63342         0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN     
+tcp6       0      0 ::1:631                 :::*                    LISTEN     
+tcp6       0      0 :::1883                 :::*                    LISTEN     
+tcp6       0      0 127.0.0.1:33057         :::*                    LISTEN     
+tcp6       0      0 127.0.1.1:8161          :::*                    LISTEN     
+tcp6       0      0 :::5445                 :::*                    LISTEN     
+tcp6       0      0 :::37                   :::*                    LISTEN     
+tcp6       0      0 127.0.0.1:37351         :::*                    LISTEN     
+tcp6       0      0 :::7                    :::*                    LISTEN     
+tcp6       0      0 :::5672                 :::*                    LISTEN     
+tcp6       0      0 :::61613                :::*                    LISTEN     
+tcp6       0      0 :::13                   :::*                    LISTEN     
+tcp6       0      0 127.0.0.1:64430         :::*                    LISTEN     
+tcp6       0      0 :::61616                :::*                    LISTEN     
+tcp6       0      0 127.0.0.1:29585         :::*                    LISTEN     
+tcp6       0      0 :::1716                 :::*                    LISTEN     
+unix  2      [ ACC ]     STREAM     LISTENING     37599    /tmp/sddm-auth474963ec-2b15-4bbd-a7ab-21c39e006a4c
+unix  2      [ ACC ]     STREAM     LISTENING     37641    /tmp/.X11-unix/X0
+unix  2      [ ACC ]     STREAM     LISTENING     48804    @/tmp/.ICE-unix/2023
+unix  2      [ ACC ]     SEQPACKET  LISTENING     28122    /run/udev/control
+unix  2      [ ACC ]     STREAM     LISTENING     41268    /tmp/.HlkevQ/s
+unix  2      [ ACC ]     STREAM     LISTENING     49216    /tmp/ssh-he1PxVMz47nx/agent.1929
+unix  2      [ ACC ]     STREAM     LISTENING     48805    /tmp/.ICE-unix/2023
+unix  2      [ ACC ]     STREAM     LISTENING     48687    /run/user/1000/systemd/private
+unix  2      [ ACC ]     STREAM     LISTENING     48692    /run/user/1000/bus
+unix  2      [ ACC ]     STREAM     LISTENING     48693    /run/user/1000/gnupg/S.dirmngr
+unix  2      [ ACC ]     STREAM     LISTENING     48694    /run/user/1000/gnupg/S.gpg-agent.browser
+unix  2      [ ACC ]     STREAM     LISTENING     48695    /run/user/1000/gnupg/S.gpg-agent.extra
+unix  2      [ ACC ]     STREAM     LISTENING     48696    /run/user/1000/gnupg/S.gpg-agent.ssh
+unix  2      [ ACC ]     STREAM     LISTENING     48697    /run/user/1000/gnupg/S.gpg-agent
+unix  2      [ ACC ]     STREAM     LISTENING     48698    /run/user/1000/pk-debconf-socket
+unix  2      [ ACC ]     STREAM     LISTENING     48699    /run/user/1000/pulse/native
+unix  2      [ ACC ]     STREAM     LISTENING     48700    /run/user/1000/snapd-session-agent.socket
+unix  2      [ ACC ]     STREAM     LISTENING     46638    /run/user/1000/keyring/control
+unix  2      [ ACC ]     STREAM     LISTENING     48773    /run/user/1000/kdeinit5__0
+unix  2      [ ACC ]     STREAM     LISTENING     49276    /run/user/1000/klauncherSvdXZQ.1.slave-socket
+unix  2      [ ACC ]     STREAM     LISTENING     37640    @/tmp/.X11-unix/X0
+unix  2      [ ACC ]     STREAM     LISTENING     28095    /run/systemd/private
+unix  2      [ ACC ]     STREAM     LISTENING     28097    /run/systemd/userdb/io.systemd.DynamicUser
+unix  2      [ ACC ]     STREAM     LISTENING     28108    /run/systemd/fsck.progress
+unix  2      [ ACC ]     STREAM     LISTENING     28118    /run/systemd/journal/stdout
+unix  2      [ ACC ]     STREAM     LISTENING     40033    /run/containerd/containerd.sock.ttrpc
+unix  2      [ ACC ]     STREAM     LISTENING     40035    /run/containerd/containerd.sock
+unix  2      [ ACC ]     STREAM     LISTENING     62324    /run/user/1000/kio_http_cache_cleaner
+unix  2      [ ACC ]     STREAM     LISTENING     27101    /run/systemd/journal/io.systemd.journal
+unix  2      [ ACC ]     STREAM     LISTENING     42037    /var/run/docker/metrics.sock
+unix  2      [ ACC ]     STREAM     LISTENING     48902    @/tmp/dbus-gjX2suJffk
+unix  2      [ ACC ]     STREAM     LISTENING     43387    /var/run/docker/libnetwork/7583e53c5e8a.sock
+unix  2      [ ACC ]     STREAM     LISTENING     557608   /run/cups/cups.sock
+unix  2      [ ACC ]     STREAM     LISTENING     33153    /run/acpid.socket
+unix  2      [ ACC ]     STREAM     LISTENING     33155    /run/avahi-daemon/socket
+unix  2      [ ACC ]     STREAM     LISTENING     33159    /run/dbus/system_bus_socket
+unix  2      [ ACC ]     STREAM     LISTENING     33161    /run/docker.sock
+unix  2      [ ACC ]     STREAM     LISTENING     33163    /run/snapd.socket
+unix  2      [ ACC ]     STREAM     LISTENING     33165    /run/snapd-snap.socket
+unix  2      [ ACC ]     STREAM     LISTENING     33167    /run/uuidd/request
+unix  2      [ ACC ]     STREAM     LISTENING     36045    /run/irqbalance//irqbalance768.sock
+unix  2      [ ACC ]     STREAM     LISTENING     35782    /var/run/vmware/guestServicePipe

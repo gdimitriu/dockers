@@ -1,0 +1,23 @@
+#### SINGLE NODE PATTERNS ####
+
+## SIDECAR PATTERN
+Sidecar containers are coscheduled onto the same machine via an atomic container group, such as the pod API object in Kubernetes.
+Sidecar containers also share a number of resources with the main application container.
+It could be like adding HTTPS on a legacy HTTP application.
+It could be used also to dynamically update configuration to the main application, with share volume between containers in pod.
+
+## AMBASSADOR PATTERN
+To access sharded service that exists somewhere in the world.
+The sharded service also has a stateless load balancer that directs traffic to the appropriate shard.
+The server is in fact actually a sharding ambassador proxy, which receives all of the requests from your application code, 
+sends a request to the appropriate storage shard,and then returns the result to your application.
+
+
+## ADAPTER PATTERN
+Used to addapt heterogenous application to external applications.
+One use case is monitoring all applications from a single point.
+
+## REPLICATED LOAD BALANCING SERVICES
+LB should know about health check and readines of a service because some services need a specific time to be available to process data.
+Add cache in front of the system like Varnish.
+

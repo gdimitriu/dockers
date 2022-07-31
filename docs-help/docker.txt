@@ -50,6 +50,34 @@ https://kubernetes.io/docs/tasks/tools/install-minikube/
 # comment is done with the # at the begining of the line and not inline comment
 # docker plugin install ... this will install by example new drivers for net, see on docker hub the plugin section
 # online repository: https://quay.io/
+# docker container run -i attach the standard input and -t attach the sudo tty
+# docker container stop send signal SIGTERM to the process 1 inside the container, and after timeout of 10 s it will send SIGKILL
+# docker container kill send signal SIGKILL but it could send another signal using -s
+# CTRL-C will send SIGINT to the docker client which will send the signal to the process 1 from the container
+# as the process 1 is still alive the container will not stop
+# the shell will not forward interrupts so is better to use CMD [...] which launch the application as process 1 instead a sh
+# you should not write into log file inside the container instead you should use stderr and stdout
+# docker decide which stderr or stdout to be flush first
+# docker container run --volume is in fact bind (mount)
+# mount type,src,destination(dst),readonly
+# mount and --volume without the name or src become anonymous volume
+# docker volume inspect to see where the volume is located
+# docker container inspect to see the mount volumes
+# docker will delete anonymous volumes if you use --rm on run
+# in Dockerfile the VOLUME will create an anonymous volume
+# use bind mount like source code or configuration file
+# use volume for data persisted into the container
+# anonymous volume are use for testing and using volumes-from-container
+# COPY will never delete file from the directory only it will override them
+# in COPY if you specify the directory it will copy the content of the directory not also the directory
+# ADD could download files and deal with tar so use ADD only if you need those features otherwise use COPY
+# docker context: .dockerignore the docker will ignore all the files that are specified in .dockeringnore file
+# pass environment variable using -e "var=value" or just -e <environment_var_name> to the container or --env-file with the file
+# if you specify in env file just the name of the environment variable name without =value
+# envsubst could replace variable from a configuration file jfahrer/envsubst
+# resolver 127.0.0.11; is available only in user defined network
+# if you use bash as starting script use exec to replace the bash as process 1
+
 
 ################## how to install docker ########################################
 
@@ -336,53 +364,14 @@ $ docker network create --driver bridge --subnet "10.1.0.0/16" test-net
 #you could ask the running container to run in the same network as another container specifing  --network container:<containerName>
 #to expose port use -p <host port>:<container port>/<protocol like tcp/udp> the tcp is the default protocol
 $ docker network inspect <network_id>
-
-############################ DOCKER COMPOSE #####################################################
-
-# githubs links: https://github.com/avescodes/docker-compose-in-depth
-
-#volumes: declare which volume to be created at first run, this will be not recreated after first run
-#volumes inside service declaration could be a volume declared or a directory from host as is mount using -v
-#by default docker-compose up is using interactive mode so the terminal si blocked to run as daemon use -d
-#docker compose prefixed all containers with the name of directory in which reside docker-compose.yml
-#you could scale the application at start usingd --scale <serviceName>=<nr of instances>
-#you could scale later on using docker-compose sclale <serviceName>=<nr of instances>
-#build option in yml is the directory (context) where it should find the Dockerfile it could be specified by: context: <directory where is the dockerfile> and dockerfile: <the name of the dockerfile if is not Dockerfile>
-#To push docker compose use:
-$ docker-compose -f Dockerfile push
-
-#useful links : https://docs.docker.com/compose/   https://docs.docker.com/compose/compose-file/
-#link use <service>:<name> will deliver the property name to the container
-# docker-compose rm #remove data from a containers
-# docker-compose network default is bridge which link all containers
-$ docker-compose exec <service_name> sh
-# container_name is global even to docker host machine and could not scale using docker-compose scale
-# links should be use in the same network it was working before in version 1
-# when contianer is replaced the old connection between the remaining container and the old remain open but no data is transfer but a new connection will work !!
-# use external_links to make an internal name to an external container which is connected to an external network, both should be share the network (external network should be defined in networks as external: true)
-# use docker-compose port to find out which port is mapped to docker host
-$ docker-compose port <service_name> <port_number>
-# use external for external volume also
-# see docs.docker.com/engine/extend/plugins/ to see the supported volume plugins
-# docs.docker.com/engine/admin/logging/overview
-# to get logs from the containers the default driver is json-file
-$ docker-compose logs <container_id>
-# paptertrailapp.com for free logging service to be used: driver is syslog and options is syslog-address: "udp://logs4.papertrailapp.com:33624"
-# when you use external system docmer-compose logs is not available
-########## docker-compose CLI ###############
-# the dirrectory is used as prefix for the container names
-# COMPOSE_NAME_PROJECT or --project-name when start an evironment instead of directory
-# doenv from github is a good project to mangage development environments
-# docker-composer events give events from the docker compose
-# docker-compose config check the config file and reports errors if it has also if is correct it will print it
-# orphan containers are containers that have been run using docker-compose run command
-# in docker-compose.yml it is possible to run with ${}
-# .env is read the by the docker-compose and replace the environments
-# each service could have a key env_file: with a list of files.
-# on evironment key if you specify variable without value it will be taken from the external environment
-# configuration files are loaded left to right
-# docker-compose.override.yml will override configuration from the docker-compose file but only if you don't specify file with -f
-
+# on -p (--publish) you could specify the ip address
+# to publish port the application should listen on eth0 address
+# to publish multiple ports use -p multiple port or specify a range
+# the link will put ip address host name into the /etc/hosts but only at start-up (the link is deprecated)
+# use docker network inspect to see the ip range of the network
+# when a container is started the container name is put into the dns if the user network is used
+# link could have aliases --link <container_name>:<alias>
+# same name on multiple container in the same network use --network-alias (especial for loadbalancer purpose)
 
 ############################## DOCKER SECURITY ####################################################
 
@@ -414,7 +403,5 @@ $ sudo cc-runtime list
 # progrim for loadbalancer
 # infrastructure teraform
 
-
-
-
-
+buildah.io or with ADD file ../
+user ARG to pass arguments

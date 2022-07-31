@@ -30,6 +30,8 @@ $ sudo apt-get install -y kubectl
 $ curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 $ chmod +x minukube
 $ sudo install minikube /usr/local/bin/
+
+
 #start the minikube
 $ minikube start --vm-driver=<driver_name>
 $ minikube status
@@ -86,6 +88,10 @@ https://metallb.universe.tf/installation/network-addons/
 
 https://stackoverflow.com/questions/44110876/kubernetes-service-external-ip-pending
 
+https://faun.pub/metallb-configuration-in-minikube-to-enable-kubernetes-service-of-type-loadbalancer-9559739787df
+
+https://medium.com/swlh/kubernetes-external-ip-service-type-5e5e9ad62fcd
+
 #ClusterIp is used for services that are not supposed to be seen outside of cluster in contrast with NodePort and LoadBalancer
 #StatefulSet is used for db and persistence in contrast with ReplicaSet
 
@@ -141,4 +147,5 @@ kubectl get pods -n gatekeeper-system
 kubectl get validatingwebhookconfiguration -o yaml
 #audit
 kubectl get constraint repo-is-kuar-demo -o yaml
+
 

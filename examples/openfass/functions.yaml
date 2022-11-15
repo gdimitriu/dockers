@@ -1,0 +1,19 @@
+---
+apiVersion: openfaas.com/v1
+kind: Function
+metadata:
+  name: fn1
+  namespace: openfaas-fn
+spec:
+  name: fn1
+  image: fn1:latest
+---
+apiVersion: openfaas.com/v1
+kind: Function
+metadata:
+  name: fn2
+  namespace: openfaas-fn
+spec:
+  name: fn2
+  image: fn2:latest
+

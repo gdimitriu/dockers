@@ -1,0 +1,4 @@
+#stack.yml
+functions:
+    nodeinfo:
+        image: functions/nodeinfo:latest

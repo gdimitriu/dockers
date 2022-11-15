@@ -1,0 +1,51 @@
+https://github.com/openfaas/faas-netes/tree/master/chart/openfaas#install
+https://github.com/openfaas/faas-netes
+https://github.com/openfaas/openfaas-operator
+https://www.openfaas.com/blog/manage-functions-with-kubectl/s
+
+#to create namespaces
+kubectl apply -f https://raw.githubusercontent.com/openfaas/faas-netes/master/namespaces.yml
+
+# Get the faas-cli or using arkade
+curl -SLsf https://cli.openfaas.com | sudo sh
+
+#install arkade
+curl -SLsf https://get.arkade.dev/ | sudo sh
+
+arkade install openfaas
+
+# If basic auth is enabled, you can now log into your gateway:
+PASSWORD=$(kubectl get secret -n openfaas basic-auth -o jsonpath="{.data.basic-auth-password}" | base64 --decode; echo)
+echo -n $PASSWORD | faas-cli login --username admin --password-stdin
+
+faas-cli store deploy figlet
+faas-cli list
+
+arkade install helm
+
+helm repo update \
+ && helm upgrade openfaas --install openfaas/openfaas \
+    --namespace openfaas  \
+    --set functionNamespace=openfaas-fn \
+    --set operator.create=true \
+    --set generateBasicAuth=true
+    
+    
+faas-cli generate --from-store <name> > file.yaml
+#to create functions
+faas-cli new --lang go fn1
+faas-cli new --lang go fn2 --append fn1.yml
+mv fn1.yml stack.yml
+
+#obj work only if the stack.yml is present
+faas-cli generate > functions.yaml
+
+# to deploy directly to the cluster
+faas-cli generate --from-store figlet  | kubectl apply -f -
+
+# to list functions
+kubectl get functions -n openfaas-fn
+
+# to edit and save not working with function/figlet
+kubectl edit functions -n openfaas-fn
+

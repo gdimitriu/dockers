@@ -1,0 +1,9 @@
+# nodeinfo.yaml
+apiVersion: openfaas.com/v1
+kind: Function
+metadata:
+    name: nodeinfo
+    namespace: openfaas-fn
+spec:
+    name: nodeinfo
+    image: functions/nodeinfo:latest

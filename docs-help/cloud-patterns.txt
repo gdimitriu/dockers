@@ -1,5 +1,8 @@
 #### SINGLE NODE PATTERNS ####
 
+### EXAMPLES ON
+https://github.com/brendandburns/designing-distributed-systems-labs
+
 ## SIDECAR PATTERN
 Sidecar containers are coscheduled onto the same machine via an atomic container group, such as the pod API object in Kubernetes.
 Sidecar containers also share a number of resources with the main application container.
@@ -20,4 +23,44 @@ One use case is monitoring all applications from a single point.
 ## REPLICATED LOAD BALANCING SERVICES
 LB should know about health check and readines of a service because some services need a specific time to be available to process data.
 Add cache in front of the system like Varnish.
+Add tls termination in front of Varnish using nginx.
+This is used for stateless services.
 
+### SHARDED SERVICES
+each replica was entirely
+In contrast to replicated services, with sharded services, each replica, or shard, is only capable of serving a subset of all requests.
+A load-balancing node, or root, is responsible for examining each request and distributing each request to the appropriate shard or shards for processing.
+This is used for statefull services.
+Be carefull when the shard function is choosed because it could be too general or it could be too restrictive (like IP address comming from different countries).
+
+### Scatter/Gather
+Is a SHARDED SERVICES with multiple REPLICATED services.
+
+### FUNCTIONAL and EVEN DRIVEN
+FaaS is ideal for deploying simple functions that can take an input, transform it into an output, and then pass it on to a different service.
+Until a replacement for kubeless is not available no example from this will work on the latest minikube.
+
+
+#### WORKER PATTERN and MULTIPE WORKER PATTERN
+The multiple worker pattern will be replaced by event driven batch processing.
+
+### EVENT-DRIVEN BATCH PROCESSING
+This is in fact a workflow based on queue.
+
+## COPIER PATTERN
+This is use when you want to duplicate an input to be processed in multiple streams.
+
+## FILTER PATTERN
+Ideally this should be done using ambassador pattern.
+
+## SPLITTER PATTERN
+Is similar with copier pattern except it divide the data (like filter but without lossing data).
+
+## SHARDER PATTERN
+Is a more general splitter.
+
+## MERGER PATTERN
+This is opposite to copier.
+
+### COORDINATED BATCH PROCESSING
+Paterns: Join/Barrier, Reduce, Sum, Histogram

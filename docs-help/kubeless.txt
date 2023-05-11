@@ -1,0 +1,6 @@
+
+curl -L https://github.com/kubeless/kubeless/releases/download/0.0.20/kubeless_linux-amd64.zip > kubeless.zip
+minikube kubectl -- create ns kubeless
+minikube kubectl -- create -f https://github.com/kubeless/kubeless/releases/download/v1.0.8/kubeless-v1.0.8.yaml
+
+!!!!! no longer works on latest kubernetes !!!!!

@@ -149,3 +149,32 @@ kubectl get validatingwebhookconfiguration -o yaml
 kubectl get constraint repo-is-kuar-demo -o yaml
 
 
+# to publish certificate into a cluster
+kubectl create secret tls ssl --cert=server.crt --key=server.key
+
+
+# examples
+minikube kubectl -- get pods
+minikube kubectl -- run nginx --image=nginx
+minikube kubectl -- describe pod nginx
+minikube kubectl -- delete pod nginx
+minikube kubectl -- apply -f nginx.yaml
+minikube kubectl -- port-forward nginx 8080:80
+
+# DO NOT FORGOT minikube service <service name> to expose the service
+# do not forget to delete pods using
+kubectl delete -f pod.yaml
+
+#to update an image used
+kubectl set image deployment/name image=version
+kubectl rollout status deployment/name
+# to roll back
+kubectl rollout undo deployment/name <--to-revision=nr>
+# to scale a deployment
+kubectl scale deployment/name --replicas=nr
+
+# join another machine as root
+https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/
+https://www.ibm.com/docs/en/control-desk/7.6.1.x?topic=kubernetes-creating-cluster-master-worker-nodes
+https://stackoverflow.com/questions/66860670/how-to-programatically-get-value-printed-by-kubernetes-in-discovery-token-ca-c
+

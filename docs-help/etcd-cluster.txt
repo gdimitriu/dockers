@@ -1,0 +1,6 @@
+#after install helm
+# No longer maintained
+helm repo add opencord https://charts.opencord.org/
+helm install my-voltha-etcd-cluster opencord/voltha-etcd-cluster --version 2.2.0
+
+https://github.com/coreos/etcd-operator

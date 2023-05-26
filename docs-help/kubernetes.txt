@@ -129,12 +129,15 @@ kubectl delete -f kuard-pod.yaml
 kubectl describe pods kuard
 #expose the internal port to external 8090
 kubectl port-forward kuard 8090:8080
+
 #getting logs
 kubectl logs kuard
 #adding --previous will get log from the previous container
+
 # execute operations in container
 kubectl exec kuard date
 kubectl exec -it kuard ash
+
 # kubectl cp <source> <destination>
 #for pod use <pod-name>:<file>
 #package to extend kubectl io.kubernetes.client.extended.kubectl
@@ -173,8 +176,19 @@ kubectl rollout undo deployment/name <--to-revision=nr>
 # to scale a deployment
 kubectl scale deployment/name --replicas=nr
 
+#multinode
+https://minikube.sigs.k8s.io/docs/tutorials/multi_node/
+
 # join another machine as root
 https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/
 https://www.ibm.com/docs/en/control-desk/7.6.1.x?topic=kubernetes-creating-cluster-master-worker-nodes
 https://stackoverflow.com/questions/66860670/how-to-programatically-get-value-printed-by-kubernetes-in-discovery-token-ca-c
 
+# to get termination message
+minikube kubectl -- get pod <terminated pod> -o json | jq -r .status.containerStatuses[].lastState.terminated.message
+
+# to convert docker compose in kubernetes objects
+https://kubernetes.io/docs/tasks/configure-pod-container/translate-compose-kubernetes/
+
+# to tune the minikube
+https://www.shellhacks.com/minikube-start-with-more-memory-cpus/

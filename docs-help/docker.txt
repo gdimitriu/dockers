@@ -86,7 +86,7 @@ $ sudo apt-get update
 $ sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
 $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 $ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu Bion stable"
+$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu noble stable"
 
 Now that you have the repository set up, run the following commands to install Docker:
 $ sudo apt-get update
@@ -145,10 +145,11 @@ $ cp config.yml.sample config.yml
 $ cp registry.key.sample registry.key
 $ cp registry.crt.sample registry.crt
 
-$ cp config.yml.sample config.yml
 #Create key using
-$openssl req -x509 -nodes -sha256 -newkey rsa:4096 -keyout registry.key -out registry.crt -days 14 -subj '/CN=127.0.0.1'
+$ openssl req -x509 -nodes -sha256 -newkey rsa:4096 -keyout registry.key -out registry.crt -days 14 -subj '/CN=127.0.0.1'
 #create the user and password
+$ docker run --entrypoint htpasswd httpd:2 -Bbn USERNAM_HERE PASSWORD_HERE > PATH_TOVOLUME/htpasswd
+
 $ docker run --entrypoint htpasswd spkane/basic-registry:latest -Bbn ${<username>} ${<password>} > htpasswd
 
 $ docker build -t my-registry .
@@ -296,7 +297,7 @@ $ sudo dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 --data-root=
 #The syntax for pulling them from the registry is very similar, but note the @ in the tag.
 $ docker pull ubuntu@sha256:2f9a...82cf
 
-#Docker containers don’t, by default, start anything in the background like a full virtual machine would. They’re a lot lighter weight than that and therefore don’t start an init system.
+#Docker containers don\92t, by default, start anything in the background like a full virtual machine would. They\92re a lot lighter weight than that and therefore don\92t start an init system.
 
 #by default docker redirect input and output to the caller of the docker
 
@@ -311,7 +312,7 @@ $ sudo nsenter --target $(docker inspect --format \{{.State.Pid\}} <containerId>
 
 
 #log are stored on /var/lib/docker/containers/<container_id>/ where the <container_id> in json format
-#logging rotation: The default settings do not currently enable log rotation. You’ll want to make sure you specify the --log-opt max-size and --log-opt max-file settings if running in production. 
+#logging rotation: The default settings do not currently enable log rotation. You\92ll want to make sure you specify the --log-opt max-size and --log-opt max-file settings if running in production. 
 #to change to other type of log : he supported option that currently is the simplest for running Docker at scale is the option to send your container logs to syslog directly from Docker. You can specify this on the Docker command line with the --log-driver=syslog option or set it as the default in the daemon.json file for all containers. Then restart the daemon.
 
 #You can log directly to a remote syslog-compatible server from a single container by setting the log option syslog-address similar to this: --log-opt syslog-address=udp://192.168.42.42:123.
@@ -405,3 +406,4 @@ $ sudo cc-runtime list
 
 buildah.io or with ADD file ../
 user ARG to pass arguments
+

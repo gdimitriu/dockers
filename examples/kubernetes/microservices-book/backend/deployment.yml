@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+    book: microservices4javadev
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: backend
+        book: microservices4javadev
+        version: v1
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTS
+          value: -Xmx256m
+        image: rhdevelopers/backend:1.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet: # make an HTTP request
+              port: 8080 # port to use
+              path: /api/backend # endpoint to hit
+              scheme: HTTP # or HTTPS
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          timeoutSeconds: 1
+        name: backend
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet: # make an HTTP request
+              port: 8080 # port to use
+              path: /api/backend # endpoint to hit
+              scheme: HTTP # or HTTPS
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 1

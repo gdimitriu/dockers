@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  labels:
+    app: api-gateway
+    book: microservices4javadev
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+        book: microservices4javadev
+        version: v1
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTIONS
+          value: -Xms128m -Xmx256m -Djava.net.preferIPv4Stack=true -Djava.security.egd=file:///dev/./urandom
+        - name: GATEWAY_SPRINGBOOTSVCURL
+          value: hello-springboot:8080
+        - name: GATEWAY_MICROPROFILESVCURL
+          value: hello-microprofile:8080
+        image: rhdevelopers/api-gateway:1.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet: # make an HTTP request
+              port: 8080 # port to use
+              path: /actuator/health # endpoint to hit
+              scheme: HTTP # or HTTPS
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          timeoutSeconds: 1
+        name: api-gateway
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet: # make an HTTP request
+              port: 8080 # port to use
+              path: /actuator/health # endpoint to hit
+              scheme: HTTP # or HTTPS
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 1

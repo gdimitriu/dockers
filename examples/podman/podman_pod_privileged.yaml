@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: podman-priv
+spec:
+  containers:
+  - name: priv
+    image: quay.io/podman/stable
+    args:
+      - podman
+      - version
+    securityContext:
+      privileged: true 
+      

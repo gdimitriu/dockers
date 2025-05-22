@@ -1,0 +1,55 @@
+ podman run -ti --rm docker://docker.io/library/httpd bash
+ podman run -d -p 8080:80 --name myapp docker://docker.io/library/httpd
+ podman port myapp
+ podman stop myapp
+ podman rm myapp
+ podman image ls
+ podman inspect myapp
+ podman inspect --format '{{ .Config.StopSignal }}' myapp
+ podman run -d -p 8080:80 --name myapp docker://docker.io/library/httpd
+ podman container cp myapp1:/usr/local/apache2/htdocs/index.html index.html
+ podman container cp index.html myapp1:/usr/local/apache2/htdocs/index.html
+ podman image ls
+ podman image tree myimage
+ podman image inspect myimage
+ podman image inspect --format '{{ .Config.Cmd }}' myimage
+ podman image inspect --format '{{ .Config.StopSignal }}' myimage
+ podman images
+ podman unshare
+ cd dev-env/dockers/examples/podman/httpd/
+ podman build -t localhost/myimage1 .
+ podman images
+ podman rmi localhost/myimage1
+ podman ps
+ podman run -d -v ./htdocs:/usr/local/apache2/htdocs:ro,z -p 8080:80 localhost/myimage
+ podman rm --latest --force
+ podman volume create webdata
+ podman volume inspect webdata
+ podman run -d -v webdata:/usr/local/apache2/htdocs:ro,z -p 8080:80 localhost/myimage
+ podman run docker.io/mariadb grep mysql /etc/passwd
+ podman rm --latest
+ podman run docker.io/mariadb grep mysql /etc/passwd
+ podman rm --latest
+ podman run --user mysql -v ./mariadb:/var/lib/mariadb:U docker.io/mariadb ls -ld /var/lib/mariadb
+ podman images
+ podman pod create -p 8080:80 --name mypod --volume ./htdocs:/usr/local/apache2/htdocs:z
+ podman build -t localhost/myimage .
+ podman create --pod mypod --name myapp localhost/myimage
+ podman pod create -p 8080:80 --name mypod --volume ./htdocs:/usr/local/apache2/htdocs:z
+ podman create --pod mypod --name myapp localhost/myimage
+ podman create --pod mypod --name time --workdir /usr/local/apache2/htdocs ubi8 ./time.sh
+ podman pod list
+ podman pod list --ctr-names
+ podman generate systemd myapp > $HOME/.config/systemd/user/myapp.service
+ podman run --privileged quay.io/podman/stable podman version
+ podman generate kube mypod > mypod.yaml
+ systemctl --user enable podman.socket
+ systemctl --user start podman.socket
+ curl -s --unix-socket $XDG_RUNTIME_DIR/podman/podman.sock http://d/v1.0.0/libpod/version | jq
+ curl -s --unix-socket $XDG_RUNTIME_DIR/podman/podman.sock http://d/v1.0.0/libpod/images/json | jq
+ curl -s --unix-socket $XDG_RUNTIME_DIR/podman/podman.sock http://d/v1.0.0/images/json | jq
+ podman pod create --name mypod
+ curl -s --unix-socket $XDG_RUNTIME_DIR/podman/podman.sock http://d/v1.0.0/libpod/pods/json | jq
+ docker-compose up
+ podman ps --format "{{.ID}} {{.Image}} {{.Ports}} {{.Names}}"
+ podman volume ls

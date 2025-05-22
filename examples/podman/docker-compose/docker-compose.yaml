@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+  myapp:
+    image: quay.io/rhatdan/myimage:latest
+    volumes:
+      - ./html:/var/www/html
+      - myapp_vol:/vol
+    ports:
+      - 8080:80
+volumes:
+  myapp_vol: {} 

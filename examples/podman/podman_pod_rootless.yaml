@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: podman-rootless
+spec:
+  containers:
+  - name: rootless
+    image: quay.io/podman/stable
+    args:
+      - podman
+      - version
+    securityContext:
+      capabilities:
+        add:
+          - "SETUID"
+          - "SETGID"
+       runAsUser: 1000
